@@ -615,3 +615,101 @@ export function decodeDelta(deltas: readonly number[]): number[] {
 export const FLAG_ALIVE = 1;
 export const FLAG_HAS_BOMB = 2;
 export const FLAG_HAS_DEFUSE_KIT = 4;
+
+// Experimental replay profile: no invented match aggregates are required.
+// Draft producer-neutral contract, independent of the stable v3 match profile.
+export const REPLAY_PROFILE_VERSION = "cs2-demo-format/replay/0.1";
+const replayTick = z.number().finite();
+const replayId = z.string().min(1).max(256);
+const replayPoint = z.tuple([z.number().finite(), z.number().finite(), z.number().finite()]);
+const replayJson: z.ZodType = z.lazy(() => z.union([
+  z.null(), z.boolean(), z.number().finite(), z.string(),
+  z.array(replayJson), z.record(z.string(), replayJson),
+]));
+const producerFields = z.record(z.string(), replayJson);
+export const replayCapabilitySchema = z.object({
+  status: z.enum(["available", "empty", "unavailable", "unknown"]),
+  reason: z.string().optional(),
+}).strict();
+export const replayPackageManifestSchema = z.object({
+  schemaVersion: z.literal(REPLAY_PROFILE_VERSION),
+  kind: z.enum(["match", "recording"]),
+  producer: z.object({ name: replayId, version: replayId, parser: replayId }).strict(),
+  mapName: replayId,
+  tickRate: z.number().int().positive(),
+  sampleRate: z.number().finite().positive().nullable(),
+  coordinateSpace: z.literal("source2-world-units"),
+  capabilities: z.record(z.string(), replayCapabilitySchema),
+  files: z.object({ metadata: replayId, players: replayId, events: replayId, analysis: replayId.optional() }).strict(),
+  segments: z.array(z.object({
+    id: replayId, file: replayId, startTick: replayTick, activeStartTick: replayTick,
+    endTick: replayTick, sourceRound: z.number().int().nullable(),
+  }).strict()).min(1),
+}).strict();
+export const replayPackageMetadataSchema = z.object({
+  name: replayId, sourceFileName: z.string().nullable(),
+  producerFields,
+}).strict();
+export const replayPackagePlayersSchema = z.array(z.object({
+  id: replayId, name: z.string(), steamId: z.string().nullable(),
+  producerFields,
+}).strict());
+export const replayPackagePlayerStateSchema = z.object({
+  playerId: replayId,
+  position: replayPoint.nullable(),
+  yaw: z.number().finite().nullable(), pitch: z.number().finite().nullable(),
+  side: z.enum(["T", "CT", "spectator", "unknown"]),
+  health: z.number().finite().nullable(), alive: z.boolean().nullable(),
+  weapon: z.string().nullable(), inventory: z.array(z.string()).nullable(),
+  armor: z.number().finite().nullable(), helmet: z.boolean().nullable(), defuseKit: z.boolean().nullable(),
+  hasBomb: z.boolean().nullable(), ammo: z.number().int().nullable(),
+  crouchAmount: z.number().finite().nullable(), airborne: z.boolean().nullable(), walking: z.boolean().nullable(),
+  flashDurationSeconds: z.number().finite().nullable(), scoped: z.boolean().nullable(),
+  money: z.number().finite().nullable(), placeName: z.string().nullable(),
+  input: z.object({
+    movement: z.array(z.enum(["FORWARD", "BACK", "LEFT", "RIGHT"])),
+    jump: z.boolean().nullable(), primaryFire: z.boolean().nullable(), secondaryFire: z.boolean().nullable(),
+    walk: z.boolean().nullable(), pinPulled: z.boolean().nullable(), throwStrength: z.number().finite().nullable(),
+  }).strict().nullable(),
+  producerFields,
+}).strict();
+export const replayPackageFrameSchema = z.object({
+  tick: replayTick, players: z.array(replayPackagePlayerStateSchema), producerFields,
+}).strict();
+export const replayPackageFramesSchema = z.array(replayPackageFrameSchema);
+export const replayPackageEventsSchema = z.array(z.object({
+  id: replayId, type: replayId, tick: replayTick,
+  actorId: replayId.nullable(), targetId: replayId.nullable(), assistantId: replayId.nullable(),
+  position: replayPoint.nullable(), weapon: z.string().nullable(), damageHealth: z.number().finite().nullable(),
+  producerFields,
+}).strict());
+export const replayPackageSegmentSchema = z.object({
+  id: replayId,
+  frames: replayPackageFramesSchema,
+  preparationFrames: replayPackageFramesSchema,
+  projectiles: z.array(z.object({
+    tick: replayTick, position: replayPoint.nullable(), type: z.string(),
+    entityId: z.string().nullable(), ownerId: replayId.nullable(), producerFields,
+  }).strict()),
+  smokeFrames: z.array(z.object({
+    tick: replayTick, entityId: z.string(), origin: replayPoint,
+    sequence: z.number().int(), voxels: z.array(z.number().int().min(0).max(32767)), producerFields,
+  }).strict()),
+  fireFrames: z.array(z.object({
+    tick: replayTick, entityId: z.string(), sequence: z.number().int(),
+    lifetime: z.number().finite(), cells: z.array(z.number().finite()), producerFields,
+  }).strict()),
+  voiceFrames: z.array(z.object({
+    tick: replayTick, playerId: replayId.nullable(), durationSeconds: z.number().finite().positive(),
+    codec: z.literal("opus"), dataBase64: z.string(), producerFields,
+  }).strict()),
+  producerFields,
+}).strict();
+export const REPLAY_PACKAGE_SCHEMAS = {
+  replayManifest: replayPackageManifestSchema,
+  replayMetadata: replayPackageMetadataSchema,
+  replayPlayers: replayPackagePlayersSchema,
+  replayEvents: replayPackageEventsSchema,
+  replayFrames: replayPackageFramesSchema,
+  replaySegment: replayPackageSegmentSchema,
+} as const;

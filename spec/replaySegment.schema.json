@@ -1,0 +1,548 @@
+{
+  "$ref": "#/definitions/replaySegment",
+  "definitions": {
+    "replaySegment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "frames": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "tick": {
+                "type": "number"
+              },
+              "players": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "playerId": {
+                      "$ref": "#/definitions/replaySegment/properties/id"
+                    },
+                    "position": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "minItems": 3,
+                          "maxItems": 3,
+                          "items": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "number"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "yaw": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "pitch": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "side": {
+                      "type": "string",
+                      "enum": [
+                        "T",
+                        "CT",
+                        "spectator",
+                        "unknown"
+                      ]
+                    },
+                    "health": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "alive": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "weapon": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "inventory": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "armor": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "helmet": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "defuseKit": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "hasBomb": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "ammo": {
+                      "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "crouchAmount": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "airborne": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "walking": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "flashDurationSeconds": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "scoped": {
+                      "type": [
+                        "boolean",
+                        "null"
+                      ]
+                    },
+                    "money": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "placeName": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "input": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "movement": {
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "enum": [
+                                  "FORWARD",
+                                  "BACK",
+                                  "LEFT",
+                                  "RIGHT"
+                                ]
+                              }
+                            },
+                            "jump": {
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            },
+                            "primaryFire": {
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            },
+                            "secondaryFire": {
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            },
+                            "walk": {
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            },
+                            "pinPulled": {
+                              "type": [
+                                "boolean",
+                                "null"
+                              ]
+                            },
+                            "throwStrength": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "movement",
+                            "jump",
+                            "primaryFire",
+                            "secondaryFire",
+                            "walk",
+                            "pinPulled",
+                            "throwStrength"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "producerFields": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "anyOf": [
+                          {
+                            "type": "null"
+                          },
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/definitions/replaySegment/properties/frames/items/properties/players/items/properties/producerFields/additionalProperties"
+                            }
+                          },
+                          {
+                            "type": "object",
+                            "additionalProperties": {
+                              "$ref": "#/definitions/replaySegment/properties/frames/items/properties/players/items/properties/producerFields/additionalProperties"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "playerId",
+                    "position",
+                    "yaw",
+                    "pitch",
+                    "side",
+                    "health",
+                    "alive",
+                    "weapon",
+                    "inventory",
+                    "armor",
+                    "helmet",
+                    "defuseKit",
+                    "hasBomb",
+                    "ammo",
+                    "crouchAmount",
+                    "airborne",
+                    "walking",
+                    "flashDurationSeconds",
+                    "scoped",
+                    "money",
+                    "placeName",
+                    "input",
+                    "producerFields"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "producerFields": {
+                "$ref": "#/definitions/replaySegment/properties/frames/items/properties/players/items/properties/producerFields"
+              }
+            },
+            "required": [
+              "tick",
+              "players",
+              "producerFields"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "preparationFrames": {
+          "$ref": "#/definitions/replaySegment/properties/frames"
+        },
+        "projectiles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "tick": {
+                "$ref": "#/definitions/replaySegment/properties/frames/items/properties/tick"
+              },
+              "position": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/replaySegment/properties/frames/items/properties/players/items/properties/position/anyOf/0"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "type": {
+                "type": "string"
+              },
+              "entityId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "ownerId": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/replaySegment/properties/id"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "producerFields": {
+                "$ref": "#/definitions/replaySegment/properties/frames/items/properties/players/items/properties/producerFields"
+              }
+            },
+            "required": [
+              "tick",
+              "position",
+              "type",
+              "entityId",
+              "ownerId",
+              "producerFields"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "smokeFrames": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "tick": {
+                "$ref": "#/definitions/replaySegment/properties/frames/items/properties/tick"
+              },
+              "entityId": {
+                "type": "string"
+              },
+              "origin": {
+                "$ref": "#/definitions/replaySegment/properties/frames/items/properties/players/items/properties/position/anyOf/0"
+              },
+              "sequence": {
+                "type": "integer"
+              },
+              "voxels": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 32767
+                }
+              },
+              "producerFields": {
+                "$ref": "#/definitions/replaySegment/properties/frames/items/properties/players/items/properties/producerFields"
+              }
+            },
+            "required": [
+              "tick",
+              "entityId",
+              "origin",
+              "sequence",
+              "voxels",
+              "producerFields"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "fireFrames": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "tick": {
+                "$ref": "#/definitions/replaySegment/properties/frames/items/properties/tick"
+              },
+              "entityId": {
+                "type": "string"
+              },
+              "sequence": {
+                "type": "integer"
+              },
+              "lifetime": {
+                "type": "number"
+              },
+              "cells": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "producerFields": {
+                "$ref": "#/definitions/replaySegment/properties/frames/items/properties/players/items/properties/producerFields"
+              }
+            },
+            "required": [
+              "tick",
+              "entityId",
+              "sequence",
+              "lifetime",
+              "cells",
+              "producerFields"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "voiceFrames": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "tick": {
+                "$ref": "#/definitions/replaySegment/properties/frames/items/properties/tick"
+              },
+              "playerId": {
+                "anyOf": [
+                  {
+                    "$ref": "#/definitions/replaySegment/properties/id"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "durationSeconds": {
+                "type": "number",
+                "exclusiveMinimum": 0
+              },
+              "codec": {
+                "type": "string",
+                "const": "opus"
+              },
+              "dataBase64": {
+                "type": "string"
+              },
+              "producerFields": {
+                "$ref": "#/definitions/replaySegment/properties/frames/items/properties/players/items/properties/producerFields"
+              }
+            },
+            "required": [
+              "tick",
+              "playerId",
+              "durationSeconds",
+              "codec",
+              "dataBase64",
+              "producerFields"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "producerFields": {
+          "$ref": "#/definitions/replaySegment/properties/frames/items/properties/players/items/properties/producerFields"
+        }
+      },
+      "required": [
+        "id",
+        "frames",
+        "preparationFrames",
+        "projectiles",
+        "smokeFrames",
+        "fireFrames",
+        "voiceFrames",
+        "producerFields"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

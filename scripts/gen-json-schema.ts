@@ -11,7 +11,7 @@
 import { zodToJsonSchema } from "zod-to-json-schema";
 import { writeFileSync, mkdirSync } from "fs";
 import { join } from "path";
-import { SCHEMAS_BY_KEY, manifestSchema } from "../schemas/index.js";
+import { SCHEMAS_BY_KEY, REPLAY_PACKAGE_SCHEMAS, manifestSchema } from "../schemas/index.js";
 
 const specDir = join(process.cwd(), "spec");
 
@@ -20,12 +20,13 @@ mkdirSync(specDir, { recursive: true });
 const entries: Array<[string, Parameters<typeof zodToJsonSchema>[0]]> = [
   ["manifest", manifestSchema],
   ...Object.entries(SCHEMAS_BY_KEY),
+  ...Object.entries(REPLAY_PACKAGE_SCHEMAS),
 ];
 
 for (const [key, schema] of entries) {
   const jsonSchema = zodToJsonSchema(schema, {
     name: key,
-    $refStrategy: "none",
+    $refStrategy: Object.prototype.hasOwnProperty.call(REPLAY_PACKAGE_SCHEMAS, key) ? "root" : "none",
   });
 
   const outPath = join(specDir, `${key}.schema.json`);

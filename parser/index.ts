@@ -137,3 +137,53 @@ export function decodeTrackFrames(
   }
   return out;
 }
+
+/** Open the draft replay profile without materializing every segment at once. */
+export async function parseReplayPackage(buffer: Buffer | ArrayBuffer) {
+  const zip = await JSZip.loadAsync(buffer);
+  const { REPLAY_PACKAGE_SCHEMAS } = await import("../schemas/index.js");
+  const safe = (name: string) => !name.startsWith("/") && !name.includes("\\") && !name.includes(":") && name.split("/").every(part => part && part !== "." && part !== "..");
+  const read = async (name: string) => {
+    if (!safe(name)) throw new Error(`Unsafe replay path: ${name}`);
+    const file = zip.file(name);
+    if (!file) throw new Error(`Missing replay file: ${name}`);
+    return JSON.parse(await file.async("text"));
+  };
+  const manifest = REPLAY_PACKAGE_SCHEMAS.replayManifest.parse(await read("manifest.json"));
+  const paths = [...Object.values(manifest.files), ...manifest.segments.map(segment => segment.file)];
+  if (new Set(paths).size !== paths.length || paths.some(name => !safe(name) || !zip.file(name))) throw new Error("Replay manifest paths are duplicate, unsafe or missing");
+  const metadata = REPLAY_PACKAGE_SCHEMAS.replayMetadata.parse(await read(manifest.files.metadata));
+  const players = REPLAY_PACKAGE_SCHEMAS.replayPlayers.parse(await read(manifest.files.players));
+  const events = REPLAY_PACKAGE_SCHEMAS.replayEvents.parse(await read(manifest.files.events));
+  const ids = new Set(players.map(player => player.id));
+  if (ids.size !== players.length) throw new Error("Replay player IDs must be unique");
+  if (new Set(events.map(event => event.id)).size !== events.length) throw new Error("Replay event IDs must be unique");
+  for (const event of events) for (const id of [event.actorId, event.targetId, event.assistantId]) if (id !== null && !ids.has(id)) throw new Error(`Unknown replay event participant: ${id}`);
+  return {
+    manifest, metadata, players, events,
+    async readSegment(index: number) {
+      const entry = manifest.segments[index];
+      if (!entry) throw new Error(`Unknown replay segment: ${index}`);
+      const segment = REPLAY_PACKAGE_SCHEMAS.replaySegment.parse(await read(entry.file));
+      if (segment.id !== entry.id || entry.startTick > entry.activeStartTick || entry.activeStartTick > entry.endTick) throw new Error("Inconsistent replay segment timeline");
+      for (const frame of [...segment.frames, ...segment.preparationFrames]) {
+        const seen = new Set<string>();
+        for (const player of frame.players) {
+          if (!ids.has(player.playerId) || seen.has(player.playerId)) throw new Error("Unknown or duplicate replay frame player");
+          seen.add(player.playerId);
+        }
+      }
+      for (const row of segment.projectiles) if (row.ownerId !== null && !ids.has(row.ownerId)) throw new Error("Unknown replay projectile owner");
+      for (const row of segment.voiceFrames) if (row.playerId !== null && !ids.has(row.playerId)) throw new Error("Unknown replay voice speaker");
+      for (const row of segment.fireFrames) if (row.cells.length % 6) throw new Error("Fire cells require groups of six components");
+      for (const track of [segment.frames, segment.preparationFrames, segment.projectiles, segment.smokeFrames, segment.fireFrames, segment.voiceFrames]) {
+        let previous = -Infinity;
+        for (const sample of track) { if (sample.tick < previous) throw new Error("Replay track ticks must be ordered"); previous = sample.tick; }
+      }
+      return segment;
+    },
+    async readAnalysis() {
+      return manifest.files.analysis ? REPLAY_PACKAGE_SCHEMAS.replayFrames.parse(await read(manifest.files.analysis)) : null;
+    },
+  };
+}

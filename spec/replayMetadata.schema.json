@@ -1,0 +1,59 @@
+{
+  "$ref": "#/definitions/replayMetadata",
+  "definitions": {
+    "replayMetadata": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "sourceFileName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "producerFields": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/replayMetadata/properties/producerFields/additionalProperties"
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/definitions/replayMetadata/properties/producerFields/additionalProperties"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "name",
+        "sourceFileName",
+        "producerFields"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

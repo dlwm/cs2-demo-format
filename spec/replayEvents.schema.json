@@ -1,0 +1,138 @@
+{
+  "$ref": "#/definitions/replayEvents",
+  "definitions": {
+    "replayEvents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "type": {
+            "$ref": "#/definitions/replayEvents/items/properties/id"
+          },
+          "tick": {
+            "type": "number"
+          },
+          "actorId": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/replayEvents/items/properties/id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "targetId": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/replayEvents/items/properties/id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "assistantId": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/replayEvents/items/properties/id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "position": {
+            "anyOf": [
+              {
+                "type": "array",
+                "minItems": 3,
+                "maxItems": 3,
+                "items": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "weapon": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "damageHealth": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "producerFields": {
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/replayEvents/items/properties/producerFields/additionalProperties"
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/definitions/replayEvents/items/properties/producerFields/additionalProperties"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "type",
+          "tick",
+          "actorId",
+          "targetId",
+          "assistantId",
+          "position",
+          "weapon",
+          "damageHealth",
+          "producerFields"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

@@ -1,0 +1,66 @@
+{
+  "$ref": "#/definitions/replayPlayers",
+  "definitions": {
+    "replayPlayers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "name": {
+            "type": "string"
+          },
+          "steamId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "producerFields": {
+            "type": "object",
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "null"
+                },
+                {
+                  "type": "boolean"
+                },
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/replayPlayers/items/properties/producerFields/additionalProperties"
+                  }
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/definitions/replayPlayers/items/properties/producerFields/additionalProperties"
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "steamId",
+          "producerFields"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

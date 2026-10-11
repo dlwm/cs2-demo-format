@@ -237,3 +237,7 @@ Before tagging, run `pnpm check:versions` so `package.json`,
 ## License
 
 MIT
+
+## Fork replay proposal
+
+An experimental, separately versioned replay profile is documented in [docs/replay-profile.md](docs/replay-profile.md). The stable v3 match contract is unchanged.

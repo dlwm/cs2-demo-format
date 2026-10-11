@@ -1,0 +1,169 @@
+{
+  "$ref": "#/definitions/replayManifest",
+  "definitions": {
+    "replayManifest": {
+      "type": "object",
+      "properties": {
+        "schemaVersion": {
+          "type": "string",
+          "const": "cs2-demo-format/replay/0.1"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "match",
+            "recording"
+          ]
+        },
+        "producer": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 256
+            },
+            "version": {
+              "$ref": "#/definitions/replayManifest/properties/producer/properties/name"
+            },
+            "parser": {
+              "$ref": "#/definitions/replayManifest/properties/producer/properties/name"
+            }
+          },
+          "required": [
+            "name",
+            "version",
+            "parser"
+          ],
+          "additionalProperties": false
+        },
+        "mapName": {
+          "$ref": "#/definitions/replayManifest/properties/producer/properties/name"
+        },
+        "tickRate": {
+          "type": "integer",
+          "exclusiveMinimum": 0
+        },
+        "sampleRate": {
+          "anyOf": [
+            {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "coordinateSpace": {
+          "type": "string",
+          "const": "source2-world-units"
+        },
+        "capabilities": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "status": {
+                "type": "string",
+                "enum": [
+                  "available",
+                  "empty",
+                  "unavailable",
+                  "unknown"
+                ]
+              },
+              "reason": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "status"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "files": {
+          "type": "object",
+          "properties": {
+            "metadata": {
+              "$ref": "#/definitions/replayManifest/properties/producer/properties/name"
+            },
+            "players": {
+              "$ref": "#/definitions/replayManifest/properties/producer/properties/name"
+            },
+            "events": {
+              "$ref": "#/definitions/replayManifest/properties/producer/properties/name"
+            },
+            "analysis": {
+              "$ref": "#/definitions/replayManifest/properties/producer/properties/name"
+            }
+          },
+          "required": [
+            "metadata",
+            "players",
+            "events"
+          ],
+          "additionalProperties": false
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "$ref": "#/definitions/replayManifest/properties/producer/properties/name"
+              },
+              "file": {
+                "$ref": "#/definitions/replayManifest/properties/producer/properties/name"
+              },
+              "startTick": {
+                "type": "number"
+              },
+              "activeStartTick": {
+                "$ref": "#/definitions/replayManifest/properties/segments/items/properties/startTick"
+              },
+              "endTick": {
+                "$ref": "#/definitions/replayManifest/properties/segments/items/properties/startTick"
+              },
+              "sourceRound": {
+                "anyOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "file",
+              "startTick",
+              "activeStartTick",
+              "endTick",
+              "sourceRound"
+            ],
+            "additionalProperties": false
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "schemaVersion",
+        "kind",
+        "producer",
+        "mapName",
+        "tickRate",
+        "sampleRate",
+        "coordinateSpace",
+        "capabilities",
+        "files",
+        "segments"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

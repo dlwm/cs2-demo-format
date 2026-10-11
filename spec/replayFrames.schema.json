@@ -1,0 +1,349 @@
+{
+  "$ref": "#/definitions/replayFrames",
+  "definitions": {
+    "replayFrames": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "tick": {
+            "type": "number"
+          },
+          "players": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "playerId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "position": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "minItems": 3,
+                      "maxItems": 3,
+                      "items": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "number"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "yaw": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "pitch": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "side": {
+                  "type": "string",
+                  "enum": [
+                    "T",
+                    "CT",
+                    "spectator",
+                    "unknown"
+                  ]
+                },
+                "health": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "alive": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "weapon": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "inventory": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "armor": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "helmet": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "defuseKit": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "hasBomb": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "ammo": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "crouchAmount": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "airborne": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "walking": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "flashDurationSeconds": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "scoped": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "money": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "placeName": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "input": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "movement": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "FORWARD",
+                              "BACK",
+                              "LEFT",
+                              "RIGHT"
+                            ]
+                          }
+                        },
+                        "jump": {
+                          "type": [
+                            "boolean",
+                            "null"
+                          ]
+                        },
+                        "primaryFire": {
+                          "type": [
+                            "boolean",
+                            "null"
+                          ]
+                        },
+                        "secondaryFire": {
+                          "type": [
+                            "boolean",
+                            "null"
+                          ]
+                        },
+                        "walk": {
+                          "type": [
+                            "boolean",
+                            "null"
+                          ]
+                        },
+                        "pinPulled": {
+                          "type": [
+                            "boolean",
+                            "null"
+                          ]
+                        },
+                        "throwStrength": {
+                          "anyOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "movement",
+                        "jump",
+                        "primaryFire",
+                        "secondaryFire",
+                        "walk",
+                        "pinPulled",
+                        "throwStrength"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "producerFields": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "null"
+                      },
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/definitions/replayFrames/items/properties/players/items/properties/producerFields/additionalProperties"
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "additionalProperties": {
+                          "$ref": "#/definitions/replayFrames/items/properties/players/items/properties/producerFields/additionalProperties"
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "playerId",
+                "position",
+                "yaw",
+                "pitch",
+                "side",
+                "health",
+                "alive",
+                "weapon",
+                "inventory",
+                "armor",
+                "helmet",
+                "defuseKit",
+                "hasBomb",
+                "ammo",
+                "crouchAmount",
+                "airborne",
+                "walking",
+                "flashDurationSeconds",
+                "scoped",
+                "money",
+                "placeName",
+                "input",
+                "producerFields"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "producerFields": {
+            "$ref": "#/definitions/replayFrames/items/properties/players/items/properties/producerFields"
+          }
+        },
+        "required": [
+          "tick",
+          "players",
+          "producerFields"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/draft-07/schema#"
+}

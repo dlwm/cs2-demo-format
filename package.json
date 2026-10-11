@@ -49,5 +49,6 @@
   },
   "peerDependencies": {
     "zod": "^3.25.76 || ^4.6.5"
-  }
+  },
+  "type": "module"
 }
